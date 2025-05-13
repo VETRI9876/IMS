@@ -12,9 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      # Step 2: Set up AWS CLI with credentials
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -22,32 +24,34 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: 'eu-north-1'
 
-      - name: List files in workspace (for debugging)
+      # Step 3: List all files in the workspace for debugging
+      - name: List files in workspace
         run: ls -la
 
+      # Step 4: Check if inventory.csv exists
       - name: Check if inventory.csv exists
         run: |
           if [ -f inventory.csv ]; then
-            echo "File exists"
+            echo "File inventory.csv exists"
           else
-            echo "File not found"
+            echo "File inventory.csv not found"
             exit 1
           fi
 
-      # Step 1: Upload the CSV file to S3
+      # Step 5: Upload inventory.csv to S3
       - name: Upload CSV to S3
         run: |
           aws s3 cp inventory.csv s3://vetri-devops-bucket/inventory.csv
 
+      # Step 6: Confirm that the file was uploaded successfully to S3
       - name: Confirm Upload to S3
         run: |
           aws s3 ls s3://vetri-devops-bucket/inventory.csv
 
-      # Step 2: Deploy Lambda Function (Code update)
+      # Step 7: Deploy Lambda Function (update code)
       - name: Deploy Lambda Function
         run: |
           zip -r lambda_function.zip lambda_function.py
-
           aws lambda update-function-code \
             --function-name devops \
             --zip-file fileb://lambda_function.zip
