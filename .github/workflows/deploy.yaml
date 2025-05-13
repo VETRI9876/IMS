@@ -1,4 +1,4 @@
-name: Deploy Inventory to S3 and Trigger DynamoDB Updates
+name: Deploy Inventory to S3 and Trigger DynamoDB Update
 
 on:
   push:
