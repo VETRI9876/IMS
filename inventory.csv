@@ -8,13 +8,13 @@ monitoring-01,192.168.2.11,Production,Monitoring Server,Amazon Linux 2,Active,Fr
 bastion-host-01,192.168.2.12,Production,Bastion Host,Ubuntu 22.04,Active,Grace,us-west-1
 monitoring-01,192.168.2.11,Production,Monitoring Server,Amazon Linux 2,Active,Frank,us-east-1
 bastion-host-01,192.168.2.12,Production,Bastion Host,Ubuntu 22.04,Active,Grace,us-west-1
-app-server-01	192.168.3.10	Production	Application Server	Red Hat Enterprise Linux 8	Active	Helen	us-east-1
-log-server-01	192.168.3.11	Production	Logging Server	Ubuntu 22.04	Active	Ian	us-east-1
-web-server-03	192.168.3.12	Development	Web Server	Ubuntu 20.04	Inactive	Jack	us-west-2
-db-server-02	192.168.3.13	Staging	Database Server	Amazon Linux 2023	Active	Karen	us-west-1
-ci-runner-02	192.168.3.14	Development	CI/CD Runner	Ubuntu 18.04	Active	Liam	us-east-2
-proxy-server-01	192.168.4.10	Production	Reverse Proxy	Ubuntu 20.04	Active	Mia	us-east-1
-backup-server-01	192.168.4.11	Production	Backup Server	CentOS 7	Active	Noah	us-west-2
-dns-server-01	192.168.4.12	Production	DNS Server	Debian 10	Active	Olivia	us-east-1
-web-server-04	192.168.4.13	Staging	Web Server	Ubuntu 22.04	Maintenance	Paul	us-west-1
-jump-box-01	192.168.4.14	Development	Jump Box	Amazon Linux 2	Active	Quinn	us-east-2
+app-server-01,192.168.3.10,Production,Application Server,Red Hat Enterprise Linux 8,Active,Helen,us-east-1
+log-server-01,192.168.3.11,Production,Logging Server,Ubuntu 22.04,Active,Ian,us-east-1
+web-server-03,192.168.3.12,Development,Web Server,Ubuntu 20.04,Inactive,Jack,us-west-2
+db-server-02,192.168.3.13,Staging,Database Server,Amazon Linux 2023,Active,Karen,us-west-1
+ci-runner-02,192.168.3.14,Development,CI/CD Runner,Ubuntu 18.04,Active,Liam,us-east-2
+proxy-server-01,192.168.4.10,Production,Reverse Proxy,Ubuntu 20.04,Active,Mia,us-east-1
+backup-server-01,192.168.4.11,Production,Backup Server,CentOS 7,Active,Noah,us-west-2
+dns-server-01,192.168.4.12,Production,DNS Server,Debian 10,Active,Olivia,us-east-1
+web-server-04,192.168.4.13,Staging,Web Server,Ubuntu 22.04,Maintenance,Paul,us-west-1
+jump-box-01,192.168.4.14,Development,Jump Box,Amazon Linux 2,Active,Quinn,us-east-2
