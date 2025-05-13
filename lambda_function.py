@@ -11,23 +11,35 @@ TABLE_NAME = 'InventoryTable'
 
 def lambda_handler(event, context):
     try:
+        # Get the CSV file from S3
         response = s3.get_object(Bucket=BUCKET_NAME, Key=FILE_NAME)
         content = response['Body'].read().decode('utf-8')
-        csv_reader = csv.DictReader(io.StringIO(content))
+
+        # Read the CSV content as dictionary
+        csv_reader = csv.DictReader(io.StringIO(content), delimiter='\t')
 
         table = dynamodb.Table(TABLE_NAME)
 
-        for row in csv_reader:
-            table.put_item(Item={
-                'Hostname': row['Hostname'],
-                'IPAddress': row['IP Address'],
-                'Environment': row['Environment'],
-                'Role': row['Role'],
-                'OS': row['OS'],
-                'Status': row['Status'],
-                'Owner': row['Owner'],
-                'Location': row['Location']
-            })
+        with table.batch_writer() as batch:
+            for row in csv_reader:
+                # Skip completely empty or malformed rows
+                if not row or not row.get('Hostname') or not row.get('IP Address'):
+                    continue
+
+                # Strip whitespace from keys and values
+                cleaned_row = {k.strip(): v.strip() for k, v in row.items() if v}
+
+                # Put the cleaned item into DynamoDB
+                batch.put_item(Item={
+                    'Hostname': cleaned_row.get('Hostname', ''),
+                    'IPAddress': cleaned_row.get('IP Address', ''),
+                    'Environment': cleaned_row.get('Environment', ''),
+                    'Role': cleaned_row.get('Role', ''),
+                    'OS': cleaned_row.get('OS', ''),
+                    'Status': cleaned_row.get('Status', ''),
+                    'Owner': cleaned_row.get('Owner', ''),
+                    'Location': cleaned_row.get('Location', '')
+                })
 
         return {
             'statusCode': 200,
