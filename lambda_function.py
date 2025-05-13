@@ -9,41 +9,43 @@ BUCKET_NAME = 'vetri-devops-bucket'
 FILE_NAME = 'inventory.csv'
 TABLE_NAME = 'InventoryTable'
 
+REQUIRED_FIELDS = ['Hostname', 'IP Address', 'Environment', 'Role', 'OS', 'Status', 'Owner', 'Location']
+
 def lambda_handler(event, context):
     try:
-        # Get the CSV file from S3
         response = s3.get_object(Bucket=BUCKET_NAME, Key=FILE_NAME)
         content = response['Body'].read().decode('utf-8')
-
-        # Read the CSV content as dictionary
-        csv_reader = csv.DictReader(io.StringIO(content), delimiter='\t')
+        csv_reader = csv.DictReader(io.StringIO(content))
 
         table = dynamodb.Table(TABLE_NAME)
 
+        count = 0
         with table.batch_writer() as batch:
             for row in csv_reader:
-                # Skip completely empty or malformed rows
-                if not row or not row.get('Hostname') or not row.get('IP Address'):
+                # Skip empty rows or rows missing required fields
+                if not row or not all(field in row and row[field].strip() for field in REQUIRED_FIELDS):
                     continue
 
-                # Strip whitespace from keys and values
-                cleaned_row = {k.strip(): v.strip() for k, v in row.items() if v}
+                # Clean up whitespace
+                cleaned_row = {k.strip(): v.strip() for k, v in row.items()}
 
-                # Put the cleaned item into DynamoDB
-                batch.put_item(Item={
-                    'Hostname': cleaned_row.get('Hostname', ''),
-                    'IPAddress': cleaned_row.get('IP Address', ''),
-                    'Environment': cleaned_row.get('Environment', ''),
-                    'Role': cleaned_row.get('Role', ''),
-                    'OS': cleaned_row.get('OS', ''),
-                    'Status': cleaned_row.get('Status', ''),
-                    'Owner': cleaned_row.get('Owner', ''),
-                    'Location': cleaned_row.get('Location', '')
-                })
+                # Insert only if all fields are non-empty
+                if all(cleaned_row.get(field) for field in REQUIRED_FIELDS):
+                    batch.put_item(Item={
+                        'Hostname': cleaned_row['Hostname'],
+                        'IPAddress': cleaned_row['IP Address'],
+                        'Environment': cleaned_row['Environment'],
+                        'Role': cleaned_row['Role'],
+                        'OS': cleaned_row['OS'],
+                        'Status': cleaned_row['Status'],
+                        'Owner': cleaned_row['Owner'],
+                        'Location': cleaned_row['Location']
+                    })
+                    count += 1
 
         return {
             'statusCode': 200,
-            'body': 'InventoryTable updated successfully from CSV file.'
+            'body': f'InventoryTable updated successfully. Total valid items inserted: {count}'
         }
 
     except Exception as e:
