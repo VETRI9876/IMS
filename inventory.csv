@@ -1,0 +1,8 @@
+Hostname,IP Address,Environment,Role,OS,Status,Owner,Location
+web-server-01,192.168.1.10,Production,Web Server,Ubuntu 20.04,Active,Alice,us-east-1
+db-server-01,192.168.1.11,Production,Database Server,Amazon Linux 2,Active,Bob,us-east-1
+cache-server-01,192.168.1.12,Staging,Cache Server,Ubuntu 22.04,Active,Charlie,us-east-1
+web-server-02,192.168.1.13,Staging,Web Server,Ubuntu 20.04,Maintenance,Diana,us-west-2
+ci-runner-01,192.168.2.10,Development,CI/CD Runner,Ubuntu 18.04,Active,Eve,us-east-2
+monitoring-01,192.168.2.11,Production,Monitoring Server,Amazon Linux 2,Active,Frank,us-east-1
+bastion-host-01,192.168.2.12,Production,Bastion Host,Ubuntu 22.04,Active,Grace,us-west-1

@@ -1,0 +1,53 @@
+name: Deploy Inventory to S3 and Trigger DynamoDB Update
+
+on:
+  push:
+    paths:
+      - 'inventory.csv' 
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'eu-north-1'
+
+      - name: List files in workspace (for debugging)
+        run: ls -la
+
+      - name: Check if inventory.csv exists
+        run: |
+          if [ -f inventory.csv ]; then
+            echo "File exists"
+          else
+            echo "File not found"
+            exit 1
+          fi
+
+      # Step 1: Upload the CSV file to S3
+      - name: Upload CSV to S3
+        run: |
+          aws s3 cp inventory.csv s3://vetri-devops-bucket/inventory.csv
+
+      - name: Confirm Upload to S3
+        run: |
+          aws s3 ls s3://vetri-devops-bucket/inventory.csv
+
+      # Step 2: Deploy Lambda Function (Code update)
+      - name: Deploy Lambda Function
+        run: |
+          zip -r lambda_function.zip lambda_function.py
+
+          aws lambda update-function-code \
+            --function-name devops \
+            --zip-file fileb://lambda_function.zip
