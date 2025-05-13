@@ -6,3 +6,5 @@ web-server-02,192.168.1.13,Staging,Web Server,Ubuntu 20.04,Maintenance,Diana,us-
 ci-runner-01,192.168.2.10,Development,CI/CD Runner,Ubuntu 18.04,Active,Eve,us-east-2
 monitoring-01,192.168.2.11,Production,Monitoring Server,Amazon Linux 2,Active,Frank,us-east-1
 bastion-host-01,192.168.2.12,Production,Bastion Host,Ubuntu 22.04,Active,Grace,us-west-1
+monitoring-01,192.168.2.11,Production,Monitoring Server,Amazon Linux 2,Active,Frank,us-east-1
+bastion-host-01,192.168.2.12,Production,Bastion Host,Ubuntu 22.04,Active,Grace,us-west-1
