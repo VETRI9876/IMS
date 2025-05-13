@@ -39,9 +39,13 @@ jobs:
             exit 1
           fi
 
-      # Step 5: Upload inventory.csv to S3
-      - name: Upload CSV to S3
+      # Step 5: Download CSV from GitHub and upload to S3
+      - name: Download CSV from GitHub and Upload to S3
         run: |
+          # Download the CSV file from the GitHub repository raw link
+          curl -o inventory.csv https://raw.githubusercontent.com/VETRI9876/IMS/main/inventory.csv
+          
+          # Upload the CSV to S3
           aws s3 cp inventory.csv s3://vetri-devops-bucket/inventory.csv
 
       # Step 6: Confirm that the file was uploaded successfully to S3
